@@ -1,0 +1,47 @@
+<div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="card shadow-lg border-0" style="width: 400px; border-radius: 15px;">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <h3 class="fw-bold text-primary">Welcome Back</h3>
+        <p class="text-muted small">Please enter your credentials to continue</p>
+      </div>
+
+      <!-- API Error Alert -->
+      @if (apiError()) {
+        <div class="alert alert-danger py-2 small" role="alert">
+          {{ apiError() }}
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Username Field -->
+        <div class="mb-3">
+          <label class="form-label small fw-semibold" for="Username">Username</label>
+          <input type="text" formControlName="username" 
+                 class="form-control form-control-lg" 
+                 [class.is-invalid]="loginForm.controls.username.touched && loginForm.controls.username.invalid"
+                 placeholder="Enter username">
+          <div class="invalid-feedback">Username must be at least 4 characters.</div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label small fw-semibold" for="password">Password</label>
+          <input type="password" formControlName="password" 
+                 class="form-control form-control-lg" 
+                 [class.is-invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+                 placeholder="********">
+          <div class="invalid-feedback">Password must be 8+ chars with at least one letter & number.</div>
+        </div>
+
+        <!-- Submit Button with Loading State -->
+        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm" 
+                [disabled]="loginForm.invalid || isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="spinner-border spinner-border-sm me-2"></span> Checking...
+          } @else {
+            Login
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

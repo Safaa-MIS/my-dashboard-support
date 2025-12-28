@@ -1,0 +1,50 @@
+/* Default sidebar width */
+.navbar {
+  width: 250px;
+  transition: width 0.3s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Collapsed sidebar */
+.navbar.collapsed {
+  width: 60px;
+}
+
+/* Hide text labels when collapsed */
+.navbar.collapsed .navbar-brand,
+.navbar.collapsed .nav-link,
+.navbar.collapsed .input-group,
+.navbar.collapsed form > *:not(button) {
+  display: none;
+}
+
+/* Keep toggle button visible when collapsed */
+.navbar .btn {
+  display: inline-block;
+}
+
+/* Search button always visible */
+.navbar.collapsed form button {
+  display: inline-block;
+}
+
+/* Adjust button alignment */
+.navbar form {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+/* Optional: center toggle button horizontally */
+.navbar.collapsed .d-flex.align-items-center {
+  justify-content: center;
+}
+
+/* Scrollable menu */
+.navbar .nav.flex-fill {
+  overflow-y: auto;
+}

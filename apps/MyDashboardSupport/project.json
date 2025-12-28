@@ -1,0 +1,94 @@
+{
+  "name": "MyDashboardSupport",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/MyDashboardSupport/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/MyDashboardSupport",
+        "index": "apps/MyDashboardSupport/src/index.html",
+        "browser": "apps/MyDashboardSupport/src/main.ts",
+        "polyfills": [],
+        "tsConfig": "apps/MyDashboardSupport/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/MyDashboardSupport/public",
+            "output": "."
+          },
+          {
+            "glob": "*.woff2",
+            "input": "node_modules/bootstrap-icons/font/fonts",
+            "output": "/media"
+          },
+          {
+            "glob": "*.woff",
+            "input": "node_modules/bootstrap-icons/font/fonts",
+            "output": "/media"
+          }
+        ],
+        "styles": [
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "apps/MyDashboardSupport/src/styles.css"
+        ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/MyDashboardSupport/src/environments/environment.ts",
+              "with": "apps/MyDashboardSupport/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "extractLicenses": true
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "MyDashboardSupport:build:production"
+        },
+        "development": {
+          "buildTarget": "MyDashboardSupport:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "MyDashboardSupport:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "MyDashboardSupport:build",
+        "port": 4200,
+        "spa": true
+      }
+    }
+  }
+}

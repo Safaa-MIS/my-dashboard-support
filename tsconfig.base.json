@@ -1,0 +1,47 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@my-dashboard-support/feature-login": [
+        "libs/auth/feature-login/src/index.ts"
+      ],
+      "@my-dashboard-support/data-access": [
+        "libs/auth/data-access/src/index.ts"
+      ],
+      "@my-dashboard-support/utils": ["libs/auth/utils/src/index.ts"],
+      "@my-dashboard-support/feature-cards": [
+        "libs/applications-hub/feature-cards/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/shared-data-access": [
+        "libs/shared/shared-data-access/src/index.ts"
+      ],
+      "@my-dashboard-support/shared-ui": ["libs/shared/ui/src/index.ts"],
+      "@my-dashboard-support/util-config": [
+        "libs/shared/util-config/src/index.ts"
+      ],
+      "@my-dashboard-support/applications-data-access": [
+        "libs/applications-hub/data-access/src/index.ts"
+      ],
+      "@my-dashboard-support/premarital": [
+        "libs/applications/premarital/src/index.ts"
+      ],
+      "@my-dashboard-support/clinicalAttachment": [
+        "libs/applications/clinicalAttachment/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

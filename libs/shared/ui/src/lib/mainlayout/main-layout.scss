@@ -1,0 +1,79 @@
+/* Define primary colors for a business theme */
+$sidebar-bg-color: #003366;       /* A professional, deep navy blue */
+$text-color: #FFFFFF;            /* Keep text white for high contrast */
+$hover-active-bg: #004085;       /* A slightly lighter blue for active/hover states */
+
+// --- Sidebar Theme Application ---
+.sidebar-custom-theme {
+  background-color: $sidebar-bg-color !important;
+  color: $text-color;
+  // Use system default font stack as seen in the image
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Make sidebar full height in relation to its container */
+  height: calc(100vh - 56px); // Adjust based on your navbar height (56px is typical Bootstrap default)
+}
+
+.custom-nav-link {
+  color: $text-color !important;
+  padding: 0.6rem 0.75rem; /* Matches image padding */
+  font-size: 0.95rem;     /* Matches image font size */
+  display: flex;
+  align-items: center;
+  border-radius: 4px; 
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+/* Specific hover design requested */
+.custom-nav-link:hover, 
+.custom-nav-link:focus,
+.custom-nav-link.active {
+  background-color: $hover-active-bg; 
+  color: $text-color !important;
+}
+
+// --- FIX FOR TASKS TOGGLE ---
+
+.collapse-content.hide {
+  display: none;
+  overflow: hidden;
+}
+
+.collapse-content.show {
+  display: block;
+  // Optional: Add a slight left padding to the submenu links to indent them
+  .nav-item a {
+    padding-left: 1.5rem !important; 
+  }
+}
+
+// --- Existing User Sidebar Functionality Styles (Rest of your styles) ---
+
+.sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  transition: all 0.3s;
+}
+
+.sidebar.collapsed {
+  margin-left: -250px;
+}
+
+.main-content {
+  transition: margin-left 0.3s;
+}
+
+.arrow {
+  transition: transform 0.3s;
+}
+
+.arrow.rotated {
+  transform: rotate(180deg);
+}
+.sidebar-custom-theme i {
+  display: inline-block; /* Ensures font icons render correctly */
+  font-family: "Font Awesome 6 Free" !important; /* Force the correct font family */
+  font-weight: 900; /* Required for 'fa-solid' icons to show up */
+  color: #FFFFFF; /* Ensure they aren't inheriting a 'transparent' or 'navy' color */
+}

@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark sticky-top">
+  
+  <div class="d-flex align-items-center">
+    <a class="navbar-brand me-3" href="#">{{title}}</a>
+    
+    <button 
+      class="btn btn-sm btn-outline-light d-lg-block d-none" 
+      (click)="toggleSidebar()" 
+      title="Toggle Menu"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+  
+  <div class="collapse navbar-collapse" id="mynav">
+    <form class="d-flex ms-auto me-2 my-lg-0" role="search">
+      <div class="input-group">
+        <span class="input-group-text bg-white" id="search">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+      </div>
+      <button class="btn btn-warning ms-2" type="submit">Search</button>
+    </form>
+
+  </div>
+</nav>
+
+<div class="d-flex flex-fill app-body"> 
+  
+  <div class="sidebar sidebar-custom-theme text-white p-3" 
+       [ngClass]="{'collapsed': !isSidebarOpen}">
+    
+    <ul class="nav flex-column sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link custom-nav-link" routerLink="users" routerLinkActive="active">
+          <i class="bi bi-people me-2"></i> Users Management
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link custom-nav-link" routerLink="clinical" routerLinkActive="active">
+          <i class="bi bi-hospital me-2"></i> Clinical Attachment
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <button class="nav-link custom-nav-link w-100 text-start border-0 bg-transparent" 
+                type="button"
+                (click)="toggleSubmenu()"
+                [attr.aria-expanded]="isSubmenu1Open()">
+          <i class="bi bi-list-task me-2"></i> 
+          <span class="nav-text">Tasks</span>
+          <i class="bi bi-chevron-down ms-auto arrow" 
+             [class.rotated]="isSubmenu1Open()"></i>
+        </button>
+        
+        <div class="collapse-content" 
+             [ngClass]="{'show': isSubmenu1Open(), 'hide': !isSubmenu1Open()}">
+          <ul class="nav flex-column ps-3">
+            <li class="nav-item">
+              <a class="nav-link text-white-50 custom-nav-link" routerLink="tasks/pending" routerLinkActive="active">Pending</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white-50 custom-nav-link" routerLink="tasks/completed" routerLinkActive="active">Completed</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link custom-nav-link" routerLink="about" routerLinkActive="active">
+          <i class="bi bi-info-circle me-2"></i> About
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link custom-nav-link" href="#">
+          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <main class="main-content p-3 flex-fill">
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
