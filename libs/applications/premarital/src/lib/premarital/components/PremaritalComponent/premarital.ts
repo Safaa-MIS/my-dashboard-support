@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {  signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,6 +9,7 @@ import { UserService } from '../../services/user-service';
 import { PagedResponse } from '../../../models/paged-response';
 import { User } from '../../../interfaces/User';
 
+import { NavigationService } from '@my-dashboard-support/shared/shared-data-access';
 @Component({
   selector: 'lib-premarital',
   standalone: true,
@@ -16,11 +17,11 @@ import { User } from '../../../interfaces/User';
   templateUrl: './premarital.html',
   styleUrl: './premarital.css',
 })
-export class PremaritalComponent implements OnInit {
+export class PremaritalComponent implements OnInit,OnDestroy {
   // Modern dependency injection
   private readonly userService = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
-
+  private readonly navService = inject(NavigationService); 
   // Signals for reactive state
   readonly searchCategory = signal<string>('');
   readonly searchText = signal<string>('');
@@ -44,7 +45,20 @@ export class PremaritalComponent implements OnInit {
   // Expose Math for template
   readonly Math = Math;
 
-  ngOnInit(): void {
+ ngOnInit(): void {
+    //SET NAVIGATION
+    this.navService.setNav([
+      {
+        label: 'Users',
+        icon: 'bi-people',
+        route: '/applications/premarital'
+      },
+      {
+        label: 'Payments',
+        icon: 'bi-credit-card',
+        route: '/applications/premarital/payments'
+      }
+    ]);
     // Setup debounced search
     this.searchSubject$
       .pipe(
@@ -204,5 +218,10 @@ export class PremaritalComponent implements OnInit {
   retryLoad(): void {
     this.error.set(null);
     this.loadUsers();
+  }
+
+   ngOnDestroy(): void {
+    //CLEAR NAVIGATION
+    this.navService.clearNav();
   }
 }

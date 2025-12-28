@@ -1,7 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
-
+import { NavigationService } from '@my-dashboard-support/shared/shared-data-access';
 @Component({
   selector: 'lib-main-layout',
   standalone: true,
@@ -12,6 +12,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 
 export class MainLayout {
   title = 'DHSupportDashboard';
+  navService = inject(NavigationService); 
    isSubmenu1Open = signal(false);
 
   toggleSubmenu() {
@@ -21,11 +22,26 @@ export class MainLayout {
  //SIDEBAR VISIBILITY: true means expanded, false means collapsed
   isSidebarOpen = true; 
 
-
   /**
    * Toggles the state of the main sidebar.
    */
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+    // ADD these for dropdown menus
+  openSubmenus = signal<string[]>([]);
+  
+  toggleSubmenuById(label: string) {
+    this.openSubmenus.update(menus => {
+      if (menus.includes(label)) {
+        return menus.filter(m => m !== label);
+      } else {
+        return [...menus, label];
+      }
+    });
+  }
+  
+  isSubmenuOpen(label: string): boolean {
+    return this.openSubmenus().includes(label);
   }
 }

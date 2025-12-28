@@ -31,55 +31,59 @@
   <div class="sidebar sidebar-custom-theme text-white p-3" 
        [ngClass]="{'collapsed': !isSidebarOpen}">
     
-    <ul class="nav flex-column sidebar-nav">
+@if (navService.navItems().length > 0) {
+  <ul class="nav flex-column sidebar-nav">
+    @for (item of navService.navItems(); track item.label) {
       <li class="nav-item">
-        <a class="nav-link custom-nav-link" routerLink="users" routerLinkActive="active">
-          <i class="bi bi-people me-2"></i> Users Management
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link custom-nav-link" routerLink="clinical" routerLinkActive="active">
-          <i class="bi bi-hospital me-2"></i> Clinical Attachment
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <button class="nav-link custom-nav-link w-100 text-start border-0 bg-transparent" 
-                type="button"
-                (click)="toggleSubmenu()"
-                [attr.aria-expanded]="isSubmenu1Open()">
-          <i class="bi bi-list-task me-2"></i> 
-          <span class="nav-text">Tasks</span>
-          <i class="bi bi-chevron-down ms-auto arrow" 
-             [class.rotated]="isSubmenu1Open()"></i>
-        </button>
         
-        <div class="collapse-content" 
-             [ngClass]="{'show': isSubmenu1Open(), 'hide': !isSubmenu1Open()}">
-          <ul class="nav flex-column ps-3">
-            <li class="nav-item">
-              <a class="nav-link text-white-50 custom-nav-link" routerLink="tasks/pending" routerLinkActive="active">Pending</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white-50 custom-nav-link" routerLink="tasks/completed" routerLinkActive="active">Completed</a>
-            </li>
-          </ul>
-        </div>
+        <!-- Item with dropdown -->
+        @if (item.children && item.children.length > 0) {
+          <button 
+            class="nav-link custom-nav-link w-100 text-start border-0 bg-transparent" 
+            (click)="toggleSubmenuById(item.label)">
+            <i class="bi {{item.icon}} me-2"></i> 
+            {{item.label}}
+            <i class="bi bi-chevron-down ms-auto arrow" 
+               [class.rotated]="isSubmenuOpen(item.label)"></i>
+          </button>
+          
+          <div class="collapse-content" 
+               [ngClass]="{'show': isSubmenuOpen(item.label), 'hide': !isSubmenuOpen(item.label)}">
+            <ul class="nav flex-column ps-3">
+              @for (child of item.children; track child.label) {
+                <li class="nav-item">
+                  <a class="nav-link text-white-50 custom-nav-link" 
+                     [routerLink]="child.route" 
+                     routerLinkActive="active">
+                    <i class="bi {{child.icon}} me-2"></i>
+                    {{child.label}}
+                  </a>
+                </li>
+              }
+            </ul>
+          </div>
+        } @else {
+          <!-- Simple link -->
+          <a class="nav-link custom-nav-link" 
+             [routerLink]="item.route" 
+             routerLinkActive="active">
+            <i class="bi {{item.icon}} me-2"></i> 
+            {{item.label}}
+          </a>
+        }
       </li>
-      
-      <li class="nav-item">
-        <a class="nav-link custom-nav-link" routerLink="about" routerLinkActive="active">
-          <i class="bi bi-info-circle me-2"></i> About
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link custom-nav-link" href="#">
-          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
-        </a>
-      </li>
-    </ul>
+    }
+  </ul>
+} @else {
+  <!-- Fallback when no navigation set -->
+  <ul class="nav flex-column sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link custom-nav-link" routerLink="/applications">
+        <i class="bi bi-grid me-2"></i> Applications
+      </a>
+    </li>
+  </ul>
+}
   </div>
 
   <main class="main-content p-3 flex-fill">
