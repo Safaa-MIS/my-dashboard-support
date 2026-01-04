@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { UserService } from '../../services/user-service';
 import { PagedResponse } from '../../../models/paged-response';
-import { User } from '@my-dashboard-support/domain';
+import { UI, User } from '@my-dashboard-support/domain';
 import { NavigationService, PermissionService } from '@my-dashboard-support/shared/shared-data-access';
 import { Router } from '@angular/router';
 import { PremaritalNavItems } from '../../config/premarital-nav-items';
@@ -41,16 +41,16 @@ import {
  * - Permission-based UI rendering
  * 
  * Best Practices Applied:
- * ✅ Uses constants instead of hardcoded values
- * ✅ Signal-based state management (zoneless ready)
- * ✅ OnPush change detection
- * ✅ Proper error handling
- * ✅ Input sanitization
- * ✅ Permission-based access control
- * ✅ Optimistic UI updates
- * ✅ Debounced search
- * ✅ Loading states
- * ✅ Comprehensive logging
+ *       Uses constants instead of hardcoded values
+ *       Signal-based state management (zoneless ready)
+ *       OnPush change detection
+ *       Proper error handling
+ *       Input sanitization
+ *       Permission-based access control
+ *       Optimistic UI updates
+ *       Debounced search
+ *       Loading states
+ *       Comprehensive logging
  */
 @Component({
   selector: 'lib-premarital',
@@ -163,7 +163,7 @@ export class PremaritalComponent implements OnInit, OnDestroy {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: (res) => this.handleSearchSuccess(res),
+        next: (res) => this.handleSearchSuccess(res as PagedResponse),
         error: (err) => this.handleError(err, MESSAGES.ERROR.LOAD_FAILED),
         complete: () => this.isLoading.set(false)
       });
@@ -174,22 +174,22 @@ export class PremaritalComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.userService
-      .getUsers(
-        this.currentPage(),
-        this.itemsPerPage(),
-        this.searchText(),
-        this.searchCategory()
-      )
-      .pipe(
-        catchError((err: any) => this.handleErrorAndReturnEmpty(err)),
-        finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((res: PagedResponse) => {
-        this.filteredUsers.set(res.data ?? []);
-        this.totalItems.set(res.total ?? 0);
-      });
+this.userService
+  .getUsers(this.currentPage(), this.itemsPerPage(), this.searchText(), this.searchCategory())
+  .pipe(
+    catchError((err: any) => this.handleErrorAndReturnEmpty(err)),
+    finalize(() => this.isLoading.set(false)),
+    takeUntilDestroyed(this.destroyRef)
+  )
+  .subscribe({
+    next: (res) => {
+      const typedRes = res as PagedResponse; 
+      this.filteredUsers.set(typedRes.data ?? []);
+      this.totalItems.set(typedRes.total ?? 0);
+    },
+    error: (err) => this.handleError(err, MESSAGES.ERROR.LOAD_FAILED)
+  });
+
   }
 
   /**
@@ -208,8 +208,6 @@ export class PremaritalComponent implements OnInit, OnDestroy {
         finalize(() => this.isLoading.set(false))
       );
   }
-
-  // ============ Event Handlers ============
 
   /**
    * Handle search form submission
@@ -395,8 +393,6 @@ export class PremaritalComponent implements OnInit, OnDestroy {
     this.loadUsers();
   }
 
-  // ============ UI Helpers ============
-
   /**
    * Get page numbers for pagination with ellipsis
    */
@@ -405,7 +401,7 @@ export class PremaritalComponent implements OnInit, OnDestroy {
     const current = this.currentPage();
     const pages: (number | string)[] = [];
 
-    if (totalPages <= PAGINATION.MAX_VISIBLE_PAGES) {
+    if (totalPages <= UI.PAGINATION.MAX_VISIBLE_PAGES) {
       // Show all pages if within limit
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
