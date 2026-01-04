@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap, catchError, of, map, shareReplay, BehaviorSubject } from 'rxjs';
 import { APP_CONFIG } from '@my-dashboard-support/util-config';
 import { LoggerService } from '@my-dashboard-support/shared/shared-data-access';
+import { ROUTES, API_ENDPOINTS, TIMING, MESSAGES } from '@my-dashboard-support/domain';
 
 interface AuthResponse {
   user: {
@@ -23,116 +24,147 @@ interface SessionStatusResponse {
   };
 }
 
+/**
+ * Authentication Service
+ * Responsibilities:
+ *   Manage user authentication state
+ *   Handle login/logout operations
+ *   Check authorization (roles & permissions)
+ *   Cache authentication status
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  // Dependencies
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly logger = inject(LoggerService);
+  private readonly config = inject(APP_CONFIG);
 
-  // Signals 
+  // State management with signals (zoneless ready)
   private readonly currentUser = signal<AuthResponse['user'] | null>(null);
   private readonly loggedIn = signal<boolean | null>(null);
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
-  // Computed signals
+  // Computed signals (memoized)
   readonly isLoggedIn = computed(() => this.loggedIn());
   readonly user = computed(() => this.currentUser());
   readonly userRoles = computed(() => this.currentUser()?.roles ?? []);
-  readonly userPermissions = computed(() => this.currentUser()?.permissions ?? []); // NEW
-  isSubmitting = signal(false);
-  errorMessage = signal<string | null>(null);
-  private config = inject(APP_CONFIG);
+  readonly userPermissions = computed(() => this.currentUser()?.permissions ?? []);
+
+  // Auth status cache
+  private authStatusCache$: Observable<boolean> | null = null;
+  private currentUserSubject = new BehaviorSubject<SessionStatusResponse['user'] | null>(null);
   
   constructor() {
     // Check auth status on service initialization
-    this.checkAuthStatus();
+    this.checkAuthStatus().subscribe();
   }
 
   /**
-   * Login user with credentials
+   * Login user with credentials 
+   * @param credentials - Username and password
+   * @returns Observable of auth response
    */
-  login(credentials: { username: string; password: string }) : Observable<AuthResponse> {
-        this.isSubmitting.set(true);
+  login(credentials: { username: string; password: string }): Observable<AuthResponse> {
+    this.isSubmitting.set(true);
     this.errorMessage.set(null);
+    
+    const endpoint = `${this.config.apiUrl}${API_ENDPOINTS.AUTH.LOGIN}`;
+    
     return this.http.post<AuthResponse>(
-     `${this.config.apiUrl}/auth/login`,
-     credentials,
+      endpoint,
+      credentials,
       { withCredentials: true }
     ).pipe(
       tap(response => {
         this.currentUser.set(response.user);
         this.loggedIn.set(true);
         this.isSubmitting.set(false);
-     //   console.log('Login successful', response.user);
+        this.logger.info('User logged in successfully', 'AuthService', {
+          userId: response.user.id,
+          username: response.user.username
+        });
       }),
       catchError(error => {
-     //   console.error('Login failed', error.error?.message);
         this.loggedIn.set(false);
         this.isSubmitting.set(false);
-        this.errorMessage.set(error.error?.message || 'Invalid credentials');
+        const message = error.error?.message || MESSAGES.ERROR.GENERIC;
+        this.errorMessage.set(message);
+        this.logger.error('Login failed', error, 'AuthService');
         throw error;
       })
     );
   }
 
-  // Check current authentication status
-private authStatusCache$: Observable<boolean> | null = null;
-private currentUserSubject = new BehaviorSubject<SessionStatusResponse['user']  | null>(null);
+  /**
+   * Check current authentication status
+   * Implements caching to reduce API calls
+   * @returns Observable of authentication status
+   */
+  checkAuthStatus(): Observable<boolean> {
+    // Return cached observable if exists
+    if (this.authStatusCache$) {
+      return this.authStatusCache$;
+    }
 
-checkAuthStatus(): Observable<boolean> {
+    const endpoint = `${this.config.apiUrl}${API_ENDPOINTS.AUTH.STATUS}`;
 
-  // Return cached observable if exists
-  if (this.authStatusCache$) {
+    // Create new observable with caching
+    this.authStatusCache$ = this.http.get<SessionStatusResponse>(
+      endpoint,
+      { withCredentials: true }
+    ).pipe(
+      map(response => {
+        if (response?.user) {
+          this.currentUser.set(response.user);
+          this.loggedIn.set(true);
+          this.currentUserSubject.next(response.user);
+          return true;
+        }
+        this.clearAuthState();
+        return false;
+      }),
+      catchError((error) => {
+        this.logger.warn('Auth status check failed', 'AuthService', { error: error.message });
+        this.clearAuthState();
+        return of(false);
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+      tap(() => {
+        // Clear cache after configured timeout
+        setTimeout(() => this.authStatusCache$ = null, TIMING.CACHE.AUTH_STATUS);
+      })
+    );
+
     return this.authStatusCache$;
   }
 
-  // Create new observable with caching
-  this.authStatusCache$ = this.http.get<SessionStatusResponse>(
-    `${this.config.apiUrl}/auth/status`,
-    { withCredentials: true }
-  ).pipe(
-    map(response => {
-      if (response?.user) {
-        this.currentUserSubject.next(response.user);
-        return true;
-      }
-      this.clearAuthState();
-      return false;
-    }),
-    catchError(() => {
-      this.clearAuthState();
-      return of(false);
-    }),
-    shareReplay({ bufferSize: 1, refCount: true }), //CACHE IT
-    tap(() => {
-      // Clear cache after 30 seconds
-      setTimeout(() => this.authStatusCache$ = null, 30000);
-    })
-  );
-
-  return this.authStatusCache$;
-}
-
   /**
    * Logout user
+   * @returns Observable of void
    */
   logout(): Observable<void> {
+    const endpoint = `${this.config.apiUrl}${API_ENDPOINTS.AUTH.LOGOUT}`;
+    
     return this.http.post<void>(
-      `${this.config.apiUrl}/auth/logout`,
+      endpoint,
       {},
       { withCredentials: true }
     ).pipe(
-      tap(() => {        
+      tap(() => {
         this.logger.flush();
         this.clearAuthState();
-        this.router.navigate(['/login']);
+        this.logger.info('User logged out', 'AuthService');
+        this.router.navigate([ROUTES.AUTH.LOGIN]);
       }),
       catchError(error => {
-        console.error('Logout failed', error);
+        this.logger.error('Logout failed', error, 'AuthService');
         // Clear state anyway on error
         this.clearAuthState();
-        this.router.navigate(['/login']);
+        this.router.navigate([ROUTES.AUTH.LOGIN]);
         return of(void 0);
       })
     );
@@ -140,6 +172,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has a specific role
+   * @param role - Role to check
+   * @returns boolean indicating if user has role
    */
   hasRole(role: string): boolean {
     const roles = this.userRoles();
@@ -148,6 +182,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has ANY of the specified roles
+   * @param roles - Array of roles to check
+   * @returns boolean indicating if user has any role
    */
   hasAnyRole(roles: string[]): boolean {
     const userRoles = this.userRoles();
@@ -156,6 +192,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has ALL of the specified roles
+   * @param roles - Array of roles to check
+   * @returns boolean indicating if user has all roles
    */
   hasAllRoles(roles: string[]): boolean {
     const userRoles = this.userRoles();
@@ -164,6 +202,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has a specific permission
+   * @param permission - Permission to check
+   * @returns boolean indicating if user has permission
    */
   hasPermission(permission: string): boolean {
     const permissions = this.userPermissions();
@@ -172,6 +212,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has ANY of the specified permissions
+   * @param permissions - Array of permissions to check
+   * @returns boolean indicating if user has any permission
    */
   hasAnyPermission(permissions: string[]): boolean {
     const userPermissions = this.userPermissions();
@@ -180,6 +222,8 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Check if user has ALL of the specified permissions
+   * @param permissions - Array of permissions to check
+   * @returns boolean indicating if user has all permissions
    */
   hasAllPermissions(permissions: string[]): boolean {
     const userPermissions = this.userPermissions();
@@ -188,28 +232,34 @@ checkAuthStatus(): Observable<boolean> {
 
   /**
    * Clear authentication state
+   * Private method to reset all auth-related state
    */
   private clearAuthState(): void {
     this.currentUser.set(null);
     this.loggedIn.set(false);
+    this.authStatusCache$ = null;
+    this.currentUserSubject.next(null);
   }
 
   /**
    * Refresh access token
+   * @returns Observable of success message
    */
   refreshToken(): Observable<{ message: string }> {
+    const endpoint = `${this.config.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`;
+    
     return this.http.post<{ message: string }>(
-      `${this.config.apiUrl}/auth/refresh`,
+      endpoint,
       {},
       { withCredentials: true }
     ).pipe(
       tap(() => {
-        console.log('Token refreshed successfully');
+        this.logger.info('Token refreshed successfully', 'AuthService');
       }),
       catchError(error => {
-        console.error('Token refresh failed', error);
+        this.logger.error('Token refresh failed', error, 'AuthService');
         this.clearAuthState();
-        this.router.navigate(['/login']);
+        this.router.navigate([ROUTES.AUTH.LOGIN]);
         throw error;
       })
     );
