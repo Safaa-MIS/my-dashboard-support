@@ -1,9 +1,37 @@
+
+<div class="page-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Applications</h1>
+        <p class="page-subtitle">Select an application to get started</p>
+      </div>
+      
+      <div class="header-right">
+        @if (currentUser()) {
+          <div class="">
+            <div class="user-details">
+              <span class="user-name">{{ currentUser()?.username }}</span>
+              <span class="user-role"></span>
+            </div>
+          </div>
+          
+          <button 
+            type="button"
+            class="btn-logout"
+            (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container py-4">
 
     <div class="product-list-container">
-      <header class="page-header">
-        <h1>Applications</h1>
-      </header>
      <div class="filters-section">
         <div class="search-box">
 

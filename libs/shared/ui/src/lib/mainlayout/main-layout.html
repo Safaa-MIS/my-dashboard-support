@@ -73,6 +73,18 @@
         }
       </li>
     }
+    <!-- LogOut -->
+       <li class="nav-item">
+        <button
+    type="button"
+    class="nav-link custom-nav-link w-100 text-start border-0 bg-transparent logout-btn"
+    (click)="logout()">
+    <i class="bi bi-box-arrow-right me-2"></i>
+    @if (isSidebarOpen) {
+      <span>Sign Out</span>
+    }
+  </button>
+      </li>
   </ul>
 } @else {
   <!-- Fallback when no navigation set -->

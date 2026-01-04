@@ -2,9 +2,10 @@ import { Injectable, signal } from '@angular/core';
 
 export interface NavItem {
   label: string;
-  icon: string;
+  icon?: string;
   route: string;
   children?: NavItem[];
+  permission?: string; 
 }
 
 @Injectable({

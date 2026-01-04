@@ -40,7 +40,8 @@
       ],
       "@my-dashboard-support/clinicalAttachment": [
         "libs/applications/clinicalAttachment/src/index.ts"
-      ]
+      ],
+      "@my-dashboard-support/domain": ["libs/shared/domain/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

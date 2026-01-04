@@ -2,6 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { NavigationService } from '@my-dashboard-support/shared/shared-data-access';
+import { AuthService } from '@my-dashboard-support/data-access';
+import { computed, ChangeDetectionStrategy } from '@angular/core';
+
 @Component({
   selector: 'lib-main-layout',
   standalone: true,
@@ -13,22 +16,15 @@ import { NavigationService } from '@my-dashboard-support/shared/shared-data-acce
 export class MainLayout {
   title = 'DHSupportDashboard';
   navService = inject(NavigationService); 
-   isSubmenu1Open = signal(false);
 
-  toggleSubmenu() {
-    this.isSubmenu1Open.update(val => !val);
-  }
-  
- //SIDEBAR VISIBILITY: true means expanded, false means collapsed
+  authService = inject(AuthService);
+
   isSidebarOpen = true; 
 
-  /**
-   * Toggles the state of the main sidebar.
-   */
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
-    // ADD these for dropdown menus
+ 
   openSubmenus = signal<string[]>([]);
   
   toggleSubmenuById(label: string) {
@@ -43,5 +39,12 @@ export class MainLayout {
   
   isSubmenuOpen(label: string): boolean {
     return this.openSubmenus().includes(label);
+  }
+   logout(): void {
+    if (confirm('Are you sure you want to logout?')) {
+      this.authService.logout().subscribe({
+        error: (err) => console.error('Logout error:', err)
+      });
+    }
   }
 }

@@ -20,19 +20,23 @@ export class ClinicalAttachment implements OnInit,OnDestroy {
           {
             label: 'Applications',
             icon: 'bi-list-ul',
-            route: '/applications/clinicalattachment/applications'
+            route: '/applications/clinicalattachment/applications',            
+            permission: 'view_clinical_dashboard'  
           },
           {
             label: 'Details',
             icon: 'bi-info-circle',
-            route: '/applications/clinicalattachment/details'
+            route: '/applications/clinicalattachment/details',
+            permission: 'view_clinical_Details'
           },
           {
             label: 'Reviews',
             icon: 'bi-star',
-            route: '/applications/clinicalattachment/reviews'
+            route: '/applications/clinicalattachment/reviews',
+            permission: 'view_clinical_Reviews'
           }
-        ]
+        ],            
+        permission: 'view_clinical_dashboard'  
       }
     ]);
   }   

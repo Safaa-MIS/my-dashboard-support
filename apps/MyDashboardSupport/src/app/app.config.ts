@@ -1,10 +1,8 @@
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
+import {  ApplicationConfig,  provideBrowserGlobalErrorListeners} from '@angular/core';
 import { provideRouter, UrlSerializer } from '@angular/router';
 import { appRoutes } from './app.routes';
-import {jwtInterceptor} from '@my-dashboard-support/utils';
+import {jwtInterceptor,csrfInterceptor} from '@my-dashboard-support/utils';
+import {errorInterceptor} from '@my-dashboard-support/shared/shared-data-access';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../environments/environment';
 
@@ -14,7 +12,10 @@ export const appConfig: ApplicationConfig = {
   providers: [provideBrowserGlobalErrorListeners(),
      provideRouter(appRoutes),
       provideHttpClient(
-      withInterceptors([jwtInterceptor])
+      withInterceptors([ 
+         csrfInterceptor,  //CSRF interceptor FIRST
+      jwtInterceptor,
+    errorInterceptor])
     ),
   
     { provide: APP_CONFIG, useValue: environment },

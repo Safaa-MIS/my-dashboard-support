@@ -1,101 +1,82 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { User } from '../../interfaces/User';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { User } from '@my-dashboard-support/domain';
 import { PagedResponse } from '../../models/paged-response';
+import { APP_CONFIG } from '@my-dashboard-support/util-config';
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-    users: User[] = [
-      {
-        id: 1, name: 'Jay Rico', email: 'jay@example.com', role: 'Admin',
-        status: 'Active'
-      },
-      {
-        id: 2, name: 'Anna Smith', email: 'anna@example.com', role: 'User',
-        status: 'Active'
-      },
-      {
-        id: 3, name: 'John Doe', email: 'john@example.com', role: 'Guest',
-        status: 'Active'
-      },
-      {
-        id: 4, name: 'Mary Jane', email: 'mary@example.com', role: 'User',
-        status: 'Active'
-      },
-      {
-        id: 5, name: 'Smith', email: 'Smith@example.com', role: 'User',
-        status: 'Active'
-      },
-      {
-        id: 6, name: 'Doe John', email: 'Doe@example.com', role: 'Guest',
-        status: 'Active'
-      },
-      {
-        id: 7, name: 'Marika', email: 'Marika@example.com', role: 'User',
-        status: 'Active'
-      },
-      {
-        id: 8, name: 'Mpon', email: 'Mpon@example.com', role: 'Admin',
-        status: 'Active'
-      },
-    {
-      id: 9, name: 'Steve Rogers', email: 'steve@example.com', role: 'Admin',
-      status: 'Active'
-    },
-    {
-      id: 10, name: 'Tony Stark', email: 'tony@example.com', role: 'User',
-      status: 'Active'
-    },
-    {
-      id: 11, name: 'Bruce Wayne', email: 'bruce@example.com', role: 'Guest',
-      status: 'Active'
-    },
-    {
-      id: 12, name: 'Peter Parker', email: 'peter@example.com', role: 'User',
-      status: 'Active'
-    },
-    {
-      id: 13, name: 'Clark Kent', email: 'clark@example.com', role: 'Admin',
-      status: 'Active'
-    },
-    {
-      id: 14, name: 'Diana Prince', email: 'diana@example.com', role: 'User',
-      status: 'Active'
-    },
-    ];
-  http = inject(HttpClient);
+  private http = inject(HttpClient);
+  private config = inject(APP_CONFIG);
 
-    getUsers(page: number, pageSize: number, searchText= '', category= ''): Observable<PagedResponse> {
-    // Filter
-    const filtered = this.users.filter(user => {
-      const matchesText =
-        !searchText ||
-        user.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchText.toLowerCase());
-      const matchesCategory =
-        !category || user.role.toLowerCase() === category.toLowerCase();
-      return matchesText && matchesCategory;
-    });
-
-    const total = filtered.length;
-
-    // Paginate
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    const data = filtered.slice(start, end);
-
-    return of({ total, data });
-  }
- /* getUsers(page: number, limit: number, search: string, role: string): Observable<PagedResponse> {
+  /**
+   * Get paginated users from API
+   * Backend should handle filtering, sorting, and pagination
+   */
+  getUsers(
+    page: number, 
+    pageSize: number, 
+    searchText = '', 
+    category = ''
+  ): Observable<PagedResponse> {
+    //Build query parameters
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString())
-      .set('search', search)
-      .set('role', role);
+      .set('pageSize', pageSize.toString());
 
-    return this.http.get<PagedResponse>('/api/users', { params });
-  }*/
+    if (searchText) {
+      params = params.set('search', searchText);
+    }
+
+    if (category) {
+      params = params.set('role', category);
+    }
+
+    //Call backend API
+    return this.http.get<PagedResponse>(
+      `${this.config.apiUrl}/users`,
+      { params }
+    );
+  }
+
+  /**
+   * Get single user by ID
+   */
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.config.apiUrl}/users/${id}`);
+  }
+
+  /**
+   * Create new user
+   */
+  createUser(user: Partial<User>): Observable<User> {
+    return this.http.post<User>(`${this.config.apiUrl}/users`, user);
+  }
+
+  /**
+   * Update existing user
+   */
+  updateUser(id: number, user: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.config.apiUrl}/users/${id}`, user);
+  }
+
+  /**
+   * Delete user
+   */
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.config.apiUrl}/users/${id}`);
+  }
+
+  /**
+   * Update user status
+   */
+  updateUserStatus(id: number, status: 'Active' | 'Inactive'): Observable<User> {
+    return this.http.patch<User>(
+      `${this.config.apiUrl}/users/${id}/status`,
+      { status }
+    );
+  }
 }
-

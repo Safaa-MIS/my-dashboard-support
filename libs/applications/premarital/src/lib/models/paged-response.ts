@@ -1,4 +1,4 @@
-import { User } from "../interfaces/User";
+import { User } from "@my-dashboard-support/domain";
 
 export interface PagedResponse {
   data: User[];
