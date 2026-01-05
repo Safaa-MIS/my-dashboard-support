@@ -3,7 +3,7 @@ import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApplicationsService } from '@my-dashboard-support/applications-data-access';
-import { AuthService } from '@my-dashboard-support/data-access';
+import { AuthService } from '@my-dashboard-support/auth/data-access';
 import { catchError, of } from 'rxjs';
 
 @Component({

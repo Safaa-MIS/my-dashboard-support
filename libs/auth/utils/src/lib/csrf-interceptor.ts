@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { CsrfTokenService } from '@my-dashboard-support/data-access';
+import { CsrfTokenService } from '@my-dashboard-support/auth/data-access';
 import { switchMap, catchError, of } from 'rxjs';
 
 export const csrfInterceptor: HttpInterceptorFn = (req, next) => {

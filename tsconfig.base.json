@@ -4,7 +4,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -15,18 +15,15 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@my-dashboard-support/feature-login": [
+      "@my-dashboard-support/auth/feature-login": [
         "libs/auth/feature-login/src/index.ts"
       ],
-      "@my-dashboard-support/data-access": [
+      "@my-dashboard-support/auth/data-access": [
         "libs/auth/data-access/src/index.ts"
       ],
       "@my-dashboard-support/utils": ["libs/auth/utils/src/index.ts"],
-      "@my-dashboard-support/feature-cards": [
+      "@my-dashboard-support/applicationshub/feature-cards": [
         "libs/applications-hub/feature-cards/src/index.ts"
-      ],
-      "@my-dashboard-support/shared/shared-data-access": [
-        "libs/shared/shared-data-access/src/index.ts"
       ],
       "@my-dashboard-support/shared-ui": ["libs/shared/ui/src/index.ts"],
       "@my-dashboard-support/util-config": [
@@ -35,13 +32,37 @@
       "@my-dashboard-support/applications-data-access": [
         "libs/applications-hub/data-access/src/index.ts"
       ],
-      "@my-dashboard-support/premarital": [
-        "libs/applications/premarital/src/index.ts"
-      ],
       "@my-dashboard-support/clinicalAttachment": [
         "libs/applications/clinicalAttachment/src/index.ts"
       ],
-      "@my-dashboard-support/domain": ["libs/shared/domain/src/index.ts"]
+      "@my-dashboard-support/shared/domain": [
+        "libs/shared/domain/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/ui-components": [
+        "libs/shared/ui-components/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/ui-services": [
+        "libs/shared/ui-services/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/data-access-http": [
+        "libs/shared/data-access-http/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/util-logging": [
+        "libs/shared/util-logging/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/util-validation": [
+        "libs/shared/util-validation/src/index.ts"
+      ],
+      "@my-dashboard-support/auth/domain": ["libs/auth/domain/src/index.ts"],
+      "@my-dashboard-support/applications/premarital/domain": [
+        "libs/applications/premarital/domain/src/index.ts"
+      ],
+      "@my-dashboard-support/applications/premarital/data-access": [
+        "libs/applications/premarital/data-access/src/index.ts"
+      ],
+      "@my-dashboard-support/premarital": [
+        "libs/applications/premarital/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

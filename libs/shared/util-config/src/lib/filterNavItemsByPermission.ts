@@ -1,4 +1,4 @@
-import { NavItem } from '@my-dashboard-support/shared/shared-data-access';
+import { NavItem } from '@my-dashboard-support/shared/domain';
 
 export function filterNavItemsByPermission(navItems: NavItem[], permissions: string[]): NavItem[] {
   return navItems

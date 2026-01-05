@@ -4,8 +4,21 @@
   "sourceRoot": "libs/shared/domain/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:shared", "type:domain"],
   "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/shared/domain/ng-package.json",
+        "tsConfig": "libs/shared/domain/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {},
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

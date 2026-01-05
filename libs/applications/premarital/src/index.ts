@@ -1,3 +1,4 @@
-export * from './lib/premarital/components/PremaritalComponent/premarital';
-export * from './lib/models/paged-response';
-export * from './lib/premarital/services/user-service';
+
+export * from './lib/components/page-header.component';
+export * from './lib/components/PremaritalComponent/premarital';
+export * from './lib/premarital.routes';

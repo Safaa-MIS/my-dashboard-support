@@ -1,18 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/out-tsc/libs/shared/domain",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    "module": "Node16", 
+    "moduleResolution": "Node16"
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/test-setup.ts"
-  ]
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

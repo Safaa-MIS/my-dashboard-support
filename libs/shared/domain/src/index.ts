@@ -6,6 +6,7 @@ export type {
   CreateUserRequest,
   UpdateUserRequest 
 } from './lib/interfaces/User';
+
 export * from './lib/constants/Routes.constants';
 export * from './lib/constants/Messages.constants';
 //export * from './lib/constants/Config.constants';
@@ -21,3 +22,6 @@ export {
   USER_STATUS,
   USER_ROLES 
 } from './lib/constants/Config.constants';
+
+export * from './lib/interfaces/NavItem';
+

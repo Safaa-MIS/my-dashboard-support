@@ -2,7 +2,7 @@ import {  ApplicationConfig,  provideBrowserGlobalErrorListeners} from '@angular
 import { provideRouter, UrlSerializer } from '@angular/router';
 import { appRoutes } from './app.routes';
 import {jwtInterceptor,csrfInterceptor} from '@my-dashboard-support/utils';
-import {errorInterceptor} from '@my-dashboard-support/shared/shared-data-access';
+import {errorInterceptor} from '@my-dashboard-support/shared/data-access-http';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../environments/environment';
 

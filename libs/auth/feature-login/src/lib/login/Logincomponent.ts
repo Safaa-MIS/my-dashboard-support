@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '@my-dashboard-support/data-access';
+import { AuthService } from '@my-dashboard-support/auth/data-access';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
