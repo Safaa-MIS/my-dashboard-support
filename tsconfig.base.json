@@ -62,6 +62,9 @@
       ],
       "@my-dashboard-support/premarital": [
         "libs/applications/premarital/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/util-pagination": [
+        "libs/shared/util-pagination/src/index.ts"
       ]
     }
   },

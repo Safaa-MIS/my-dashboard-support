@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '@my-dashboard-support/shared/ui-services';
 import { catchError, throwError } from 'rxjs';
 import { LoggerService } from '@my-dashboard-support/shared/util-logging';
 import { MESSAGES, ROUTES } from '@my-dashboard-support/shared/domain';

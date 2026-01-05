@@ -6,8 +6,8 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
-    "module": "Node16",
-    "moduleResolution": "Node16"
+    "module": "preserve",
+    "moduleResolution": "bundler"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]

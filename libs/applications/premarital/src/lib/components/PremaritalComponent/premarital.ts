@@ -15,8 +15,8 @@ import {
 } from 'rxjs';
 import { UserService,PagedResponse ,PremaritalNavItems} from '@my-dashboard-support/applications/premarital/data-access';
 import { UI ,User} from '@my-dashboard-support/shared/domain';
-import { NavigationService } from '@my-dashboard-support/shared/data-access-http';
-import {  PermissionService } from '@my-dashboard-support/auth/data-access';
+import { NavigationService } from '@my-dashboard-support/shared/ui-services';
+import { PermissionService } from '@my-dashboard-support/auth/data-access';
 import { Router } from '@angular/router';
 import { filterNavItemsByPermission } from '@my-dashboard-support/util-config';
 

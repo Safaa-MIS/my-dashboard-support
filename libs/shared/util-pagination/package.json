@@ -1,7 +1,6 @@
 {
-  "name": "@my-dashboard-support/shared/util-config",
+  "name": "@my-dashboard-support/shared/util-pagination",
   "version": "0.0.1",
-  "type": "module",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0"

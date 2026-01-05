@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { NavigationService } from '@my-dashboard-support/shared/data-access-http';
+import { NavigationService } from '@my-dashboard-support/shared/ui-services';
 import { AuthService } from '@my-dashboard-support/auth/data-access';
 import { computed, ChangeDetectionStrategy } from '@angular/core';
 

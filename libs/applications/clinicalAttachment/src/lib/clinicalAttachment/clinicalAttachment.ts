@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 
-import { NavigationService } from '@my-dashboard-support/shared/data-access-http';
+import { NavigationService } from '@my-dashboard-support/shared/ui-services';
 @Component({
   selector: 'lib-clinical-attachment',
   imports: [],
