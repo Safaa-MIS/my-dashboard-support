@@ -26,23 +26,27 @@
         "libs/applications-hub/feature-cards/src/index.ts"
       ],
       "@my-dashboard-support/shared-ui": ["libs/shared/ui/src/index.ts"],
-      "@my-dashboard-support/util-config": [
-        "libs/shared/util-config/src/index.ts"
-      ],
+    
       "@my-dashboard-support/applications-data-access": [
         "libs/applications-hub/data-access/src/index.ts"
       ],
       "@my-dashboard-support/clinicalAttachment": [
         "libs/applications/clinicalAttachment/src/index.ts"
       ],
+        "@my-dashboard-support/util-config": [
+        "dist/libs/shared/util-config",
+        "libs/shared/util-config/src/index.ts"
+      ],
       "@my-dashboard-support/shared/domain": [
+        "dist/libs/shared/domain",
         "libs/shared/domain/src/index.ts"
+      ],
+      "@my-dashboard-support/shared/ui-services": [
+        "dist/libs/shared/ui-services",
+        "libs/shared/ui-services/src/index.ts"
       ],
       "@my-dashboard-support/shared/ui-components": [
         "libs/shared/ui-components/src/index.ts"
-      ],
-      "@my-dashboard-support/shared/ui-services": [
-        "libs/shared/ui-services/src/index.ts"
       ],
       "@my-dashboard-support/shared/data-access-http": [
         "libs/shared/data-access-http/src/index.ts"
