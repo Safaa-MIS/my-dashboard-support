@@ -35,8 +35,6 @@
   <ul class="nav flex-column sidebar-nav">
     @for (item of navService.navItems(); track item.label) {
       <li class="nav-item">
-        
-        <!-- Item with dropdown -->
         @if (item.children && item.children.length > 0) {
           <button 
             class="nav-link custom-nav-link w-100 text-start border-0 bg-transparent" 

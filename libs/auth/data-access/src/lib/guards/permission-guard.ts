@@ -3,55 +3,60 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth-service';
-
+  interface PermissionRouteData {
+  permission?: string;
+  permissions?: string[];
+  requireAll?: boolean;
+}
 export const permissionGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => { 
   const authService = inject(AuthService);
   const router = inject(Router);
   
-  // Get permission(s) from route data
-  const singlePermission = route.data['permission'] as string | undefined;
-  const multiplePermissions = route.data['permissions'] as string[] | undefined;
-  const requireAll = route.data['requireAll'] === true;
-
+  // Get permission/permissions from route data
+ // const singlePermission = route.data['permission'] as string | undefined;
+ // const multiplePermissions = route.data['permissions'] as string[] | undefined;
+ // const requireAll = route.data['requireAll'] === true;
+  const { permission, permissions, requireAll } = route.data as PermissionRouteData;
+  
   // Check if logged in first (synchronous)
   if (!authService.isLoggedIn()) {
     console.warn('User not logged in, redirecting to login');
     return router.parseUrl('/login');
   }
 
-  if (singlePermission && multiplePermissions) {
+  if (permission && permissions) {
     console.error('Route has both permission and permissions defined');
     return router.parseUrl('/unauthorized');
   }
 
   // Check  permission
-  if (singlePermission) {
-    const hasPermission = authService.hasPermission(singlePermission);
+  if (permission) {
+    const hasPermission = authService.hasPermission(permission);
     
     if (!hasPermission) {
-      console.warn(`Permission denied: ${singlePermission}`);
+      console.warn(`Permission denied: ${permission}`);
       console.warn('User permissions:', authService.userPermissions());
       return router.parseUrl('/unauthorized');
     }
     
-    console.log(`Permission granted: ${singlePermission}`);
+    console.log(`Permission granted: ${permission}`);
     return true;
   }
 
   // Check multiple permissions
-  if (multiplePermissions && multiplePermissions.length > 0) {
+  if (permissions && permissions.length > 0) {
     const hasPermissions = requireAll 
-      ? authService.hasAllPermissions(multiplePermissions)
-      : authService.hasAnyPermission(multiplePermissions);
+      ? authService.hasAllPermissions(permissions)
+      : authService.hasAnyPermission(permissions);
     
     if (!hasPermissions) {
       const mode = requireAll ? 'ALL' : 'ANY';
-      console.warn(`Permissions denied (need ${mode} of):`, multiplePermissions);
+      console.warn(`Permissions denied (need ${mode} of):`, permissions);
       console.warn('User permissions:', authService.userPermissions());
       return router.parseUrl('/unauthorized');
     }
     
-    console.log('Permissions granted:', multiplePermissions);
+    console.log('Permissions granted:', permissions);
     return true;
   }
 

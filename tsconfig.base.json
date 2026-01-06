@@ -34,15 +34,12 @@
         "libs/applications/clinicalAttachment/src/index.ts"
       ],
         "@my-dashboard-support/util-config": [
-        "dist/libs/shared/util-config",
         "libs/shared/util-config/src/index.ts"
       ],
       "@my-dashboard-support/shared/domain": [
-        "dist/libs/shared/domain",
         "libs/shared/domain/src/index.ts"
       ],
       "@my-dashboard-support/shared/ui-services": [
-        "dist/libs/shared/ui-services",
         "libs/shared/ui-services/src/index.ts"
       ],
       "@my-dashboard-support/shared/ui-components": [

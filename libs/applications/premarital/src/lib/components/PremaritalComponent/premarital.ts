@@ -31,28 +31,8 @@ import {
   HTTP
 } from '@my-dashboard-support/shared/domain';
 import { HttpErrorResponse } from '@angular/common/http';
+import { getPageNumbers } from '@my-dashboard-support/shared/util-pagination';
 
-/**
- * Premarital Component
- * 
- * Responsibilities:
- * - Display paginated user list
- * - Handle search and filtering
- * - Manage user CRUD operations
- * - Permission-based UI rendering
- * 
- * Best Practices Applied:
- *       Uses constants instead of hardcoded values
- *       Signal-based state management (zoneless ready)
- *       OnPush change detection
- *       Proper error handling
- *       Input sanitization
- *       Permission-based access control
- *       Optimistic UI updates
- *       Debounced search
- *       Loading states
- *       Comprehensive logging
- */
 @Component({
   selector: 'lib-premarital',
   standalone: true,
@@ -401,49 +381,17 @@ private handleErrorAndReturnEmpty(err: unknown): Observable<PagedResponse> {
     } as PagedResponse);
   }
 
-  /**
-   * Retry loading after error
-   */
+  // Retry loading after error
   retryLoad(): void {
     this.error.set(null);
     this.loadUsers();
   }
 
-  /**
-   * Get page numbers for pagination with ellipsis
-   */
-  getPageNumbers(): (number | string)[] {
-    const totalPages = this.totalPages();
-    const current = this.currentPage();
-    const pages: (number | string)[] = [];
+readonly pageNumbers = computed(() => 
+  getPageNumbers({
+    currentPage: this.currentPage(),
+    totalPages: this.totalPages()
+  })
+);
 
-    if (totalPages <= UI.PAGINATION.MAX_VISIBLE_PAGES) {
-      // Show all pages if within limit
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      // Show pages with ellipsis
-      pages.push(1);
-
-      if (current > 3) {
-        pages.push('...');
-      }
-
-      const start = Math.max(2, current - 1);
-      const end = Math.min(totalPages - 1, current + 1);
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (current < totalPages - 2) {
-        pages.push('...');
-      }
-
-      pages.push(totalPages);
-    }
-
-    return pages;
-  }
 }
