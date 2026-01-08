@@ -30,8 +30,8 @@
       "@my-dashboard-support/applications-data-access": [
         "libs/applications-hub/data-access/src/index.ts"
       ],
-      "@my-dashboard-support/clinicalAttachment": [
-        "libs/applications/clinicalAttachment/src/index.ts"
+      "@my-dashboard-support/clinical-attachment": [
+        "libs/applications/clinical-attachment/src/index.ts"
       ],
         "@my-dashboard-support/util-config": [
         "libs/shared/util-config/src/index.ts"

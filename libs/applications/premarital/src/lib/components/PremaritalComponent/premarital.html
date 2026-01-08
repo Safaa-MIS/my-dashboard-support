@@ -39,11 +39,11 @@
 <!-- Search & Filter Card -->
 <div class="card shadow-sm mb-4">
   <div class="card-body">
-    <form (submit)="onSearch($event)">
+    <form (submit)="onSearch($event)" aria-label="User search form">
       <div class="row g-3 align-items-end">
         <div class="col-md-3">
           <label for="searchCategory" class="form-label fw-semibold">
-            <i class="bi bi-funnel me-1"></i>Category
+            <i class="bi bi-funnel me-1" aria-hidden="true"></i>Category
           </label>
           <select 
             id="searchCategory" 
@@ -51,7 +51,8 @@
             (ngModelChange)="onCategoryChange($event)"
             name="category" 
             class="form-select"
-            [disabled]="isLoading()">
+            [disabled]="isLoading()"
+        aria-label="Filter by category">
             <option value="">All Categories</option>
             <option value="Admin">Admin</option>
             <option value="User">User</option>
@@ -62,7 +63,7 @@
 
         <div class="col-md-6">
           <label for="searchInput" class="form-label fw-semibold">
-            <i class="bi bi-search me-1"></i>Search
+            <i class="bi bi-search me-1" aria-hidden="true"></i>Search
           </label>
           <input 
             id="searchInput" 
@@ -73,12 +74,14 @@
             class="form-control" 
             placeholder="Search by name or email..."
             [disabled]="isLoading()"
-            maxlength="100">
+            maxlength="100"
+            aria-label="Search users by name or email">
         </div>
 
         <div class="col-md-3">
-          <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading()">
-            <i class="bi bi-search me-2"></i>Search
+          <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading()"
+        aria-label="Submit search">
+        <i class="bi bi-search me-2" aria-hidden="true"></i>Search
           </button>
         </div>
       </div>
@@ -116,7 +119,7 @@
 <div class="card shadow-sm">
   <div class="card-body p-0">
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
+      <table class="table table-hover align-middle mb-0"aria-label="Users list">
         <thead class="table-light">
           <tr>
             <th class="px-4">#</th>
@@ -128,12 +131,12 @@
           </tr>
         </thead>
         <tbody>
-          @for (user of filteredUsers(); track user.id; let i = $index) {
+          @for (user of filteredUsers(); track user.id; let i = $index) { 
             <tr class="border-bottom">
               <td class="px-4 text-muted">{{ (currentPage() - 1) * itemsPerPage() + i + 1 }}</td>
               <td>
                 <div class="d-flex align-items-center">
-                  <div class="avatar-circle me-2">
+                  <div class="avatar-circle me-2" aria-hidden="true">
                     {{ (user.name ?? 'Unknown').charAt(0).toUpperCase() }}
                   </div>
                   <span class="fw-medium">{{ user.name ?? 'Unknown User' }}</span>
@@ -141,7 +144,7 @@
               </td>
               <td class="text-muted">{{ user.email }}</td>
               <td>
-                <!-- ✅ Handle array of roles -->
+                <!-- Handle array of roles -->
                 @for (role of user.roles; track role) {
                   <span 
                     class="badge rounded-pill me-1"
@@ -150,7 +153,8 @@
                       'bg-primary': role === 'User',
                       'bg-secondary': role === 'Guest',
                       'bg-info': role === 'Manager'
-                    }">
+                    }"
+              [attr.aria-label]="'User role: ' + role">
                     {{ role }}
                   </span>
                 }
@@ -161,75 +165,104 @@
                   [ngClass]="{
                     'bg-success-subtle text-success border border-success': user.status === 'Active',
                     'bg-danger-subtle text-danger border border-danger': user.status === 'Inactive'
-                  }">
+                  }"
+            [attr.aria-label]="'User status: ' + user.status">
                   <i class="bi me-1" 
                      [ngClass]="{
                        'bi-check-circle-fill': user.status === 'Active',
                        'bi-x-circle-fill': user.status === 'Inactive'
-                     }"></i>
+                     }"aria-hidden="true"></i>
                   {{ user.status }}
                 </span>
               </td>
-           @if (permissions().canEditUser || permissions().canDeleteUser) {
-  <td class="text-end px-4">
-    <div class="btn-group btn-group-sm">
-      @if (permissions().canEditUser) {
-        <button (click)="onEditUser(user)">Edit</button>
+         @if (permissions().canEditUser || permissions().canDeleteUser) {
+          <td role="cell" class="text-end px-4">
+            <div class="btn-group btn-group-sm" role="group" aria-label="User actions">
+              @if (permissions().canEditUser) {
+                <button 
+                  (click)="onEditUser(user)"
+                  class="btn btn-outline-primary"
+                  aria-label="Edit {{ user.name ?? user.email }}">
+                  <i class="bi bi-pencil" aria-hidden="true"></i>
+                  Edit
+                </button>
+              }
+              @if (permissions().canDeleteUser) {
+                <button 
+                  (click)="onDeleteUser(user)"
+                  class="btn btn-outline-danger"
+                  aria-label="Delete {{ user.name ?? user.email }}">
+                  <i class="bi bi-trash" aria-hidden="true"></i>
+                  Delete
+                </button>
+              }
+            </div>
+          </td>
+        }
+      </tr>
+    } @empty {
+      @if (!isLoading()) {
+        <tr>
+          <td colspan="6" class="text-center py-5" role="cell">
+            <div class="text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-2" aria-hidden="true"></i>
+              <p class="mb-0">No records found</p>
+              @if (searchText() || searchCategory()) {
+                <p class="small">Try adjusting your search filters</p>
+              }
+            </div>
+          </td>
+        </tr>
       }
-      @if (permissions().canDeleteUser) {
-        <button (click)="onDeleteUser(user)">Delete</button>
-      }
-    </div>
-  </td>
-}
-            </tr>
-          } @empty {
-            @if (!isLoading()) {
-              <tr>
-                <td colspan="6" class="text-center py-5">
-                  <div class="text-muted">
-                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                    <p class="mb-0">No records found</p>
-                    @if (searchText() || searchCategory()) {
-                      <p class="small">Try adjusting your search filters</p>
-                    }
-                  </div>
-                </td>
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+    }
+  </tbody>
+</table>
 
 <!-- Pagination -->
 @if (totalItems() > itemsPerPage()) {
-  <nav aria-label="Page navigation" class="mt-4">
+  <nav aria-label="User list pagination" class="mt-4">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage() === 1 || isLoading()">
-        <a class="page-link" href="#" (click)="pageChanged($event, currentPage() - 1)">
-          <i class="bi bi-chevron-left"></i>
+        <a 
+          class="page-link" 
+          href="#" 
+          (click)="pageChanged($event, currentPage() - 1)"
+          [attr.aria-label]="'Go to previous page'"
+          [attr.aria-disabled]="currentPage() === 1 || isLoading()">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+          <span class="visually-hidden">Previous</span>
         </a>
       </li>
       @for (page of pageNumbers(); track page) {
         @if (page === '...') {
           <li class="page-item disabled">
-            <span class="page-link">...</span>
+            <span class="page-link" aria-hidden="true">...</span>
           </li>
         } @else {
           <li
             class="page-item"
             [class.active]="currentPage() === page"
             [class.disabled]="isLoading()">
-            <a class="page-link" href="#" (click)="pageChanged($event, page)">{{ page }}</a>
+            <a 
+              class="page-link" 
+              href="#" 
+              (click)="pageChanged($event, page)"
+              [attr.aria-label]="'Go to page ' + page"
+              [attr.aria-current]="currentPage() === page ? 'page' : null">
+              {{ page }}
+            </a>
           </li>
         }
       }
       <li class="page-item" [class.disabled]="currentPage() === totalPages() || isLoading()">
-        <a class="page-link" href="#" (click)="pageChanged($event, currentPage() + 1)">
-          <i class="bi bi-chevron-right"></i>
+        <a 
+          class="page-link" 
+          href="#" 
+          (click)="pageChanged($event, currentPage() + 1)"
+          [attr.aria-label]="'Go to next page'"
+          [attr.aria-disabled]="currentPage() === totalPages() || isLoading()">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          <span class="visually-hidden">Next</span>
         </a>
       </li>
     </ul>

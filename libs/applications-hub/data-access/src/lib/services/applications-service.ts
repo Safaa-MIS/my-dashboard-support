@@ -2,13 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { APP_CONFIG } from '@my-dashboard-support/util-config';
 import { shareReplay } from 'rxjs';
-export interface AppCardDto {
-  id: string;
-  name: string;
-  route?: string;
-  //icon?: string;
-}
-
+import { AppCardDto } from '../models/app-card.dto';
 
 @Injectable({
   providedIn: 'root',

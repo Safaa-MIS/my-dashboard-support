@@ -3,7 +3,13 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@angular/router": "~21.0.0",
+    "@my-dashboard-support/shared/ui-services": "0.0.1",
+    "rxjs": "~7.8.0",
+    "@my-dashboard-support/shared/util-logging": "0.0.1",
+    "@my-dashboard-support/shared/domain": "0.0.1",
+    "@angular/platform-browser": "~21.0.0"
   },
   "sideEffects": false
 }

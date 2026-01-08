@@ -1,5 +1,7 @@
 // domain/interfaces/User.ts
 
+import { UserRole } from "../types/UserRoles";
+
 
 
 // Define status type
@@ -10,14 +12,14 @@ export interface User {
   id: number;
   name: string | null;
   email: string;
-  roles: string[];
+  roles: UserRole[];
   permissions: string[]; 
   status: UserStatus;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// For backend responses (when dates are strings)
+// For backend responses (dates are strings from backend, also roles may be strings)
 export interface UserDTO {
   id: number;
   name: string | null;
@@ -35,7 +37,7 @@ export interface AuthResponse {
     id: string;
     username: string;
     roles: string[];
-    permissions: string[]; // NEW: Permissions in auth response
+    permissions: string[]; // Permissions in auth response
   };
 }
 

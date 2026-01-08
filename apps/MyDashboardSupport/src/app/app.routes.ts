@@ -14,7 +14,7 @@ export const appRoutes: Route[] = [
     canActivate: [noAuthGuard],
     loadComponent: () =>
       import('@my-dashboard-support/auth/feature-login')
-        .then(m => m.Logincomponent)
+        .then(m => m.LoginComponent)
   },
 
   {
@@ -61,7 +61,7 @@ export const appRoutes: Route[] = [
        canActivate: [permissionGuard],
        data: { permission: 'view_clinical_attachment' },
        loadComponent: () =>
-         import('@my-dashboard-support/clinicalAttachment')
+         import('@my-dashboard-support/clinical-attachment')
            .then(m => m.ClinicalAttachment)
         },]},
     ]

@@ -2,7 +2,6 @@
   "name": "@my-dashboard-support/applications/premarital/domain",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0"
   },
   "sideEffects": false

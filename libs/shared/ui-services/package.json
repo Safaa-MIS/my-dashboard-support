@@ -2,8 +2,8 @@
   "name": "@my-dashboard-support/shared/ui-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@my-dashboard-support/shared/domain": "0.0.1"
   },
   "sideEffects": false
 }

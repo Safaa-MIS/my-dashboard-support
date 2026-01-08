@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
   selector: 'lib-logincomponent',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './Logincomponent.html',
-  styleUrl: './Logincomponent.css',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
-export class Logincomponent {
+export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);

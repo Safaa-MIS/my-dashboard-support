@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApplicationsService } from '@my-dashboard-support/applications-data-access';
@@ -12,6 +12,7 @@ import { catchError, of } from 'rxjs';
   imports: [CommonModule, RouterModule],
   templateUrl: './feature-cards.html',
   styleUrl: './feature-cards.css',
+  changeDetection: ChangeDetectionStrategy.OnPush 
 })
 export class FeatureCards implements OnInit {
   private appsService = inject(ApplicationsService);

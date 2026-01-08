@@ -5,6 +5,7 @@
   "prefix": "lib",
   "projectType": "library",
   "tags": ["type:data-access", "scope:premarital"],
+  "implicitDependencies": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

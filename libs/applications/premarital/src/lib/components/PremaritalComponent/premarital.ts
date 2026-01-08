@@ -14,7 +14,7 @@ import {
   Observable
 } from 'rxjs';
 import { UserService,PagedResponse ,PremaritalNavItems} from '@my-dashboard-support/applications/premarital/data-access';
-import { UI ,User} from '@my-dashboard-support/shared/domain';
+import { User} from '@my-dashboard-support/shared/domain';
 import { NavigationService } from '@my-dashboard-support/shared/ui-services';
 import { PermissionService } from '@my-dashboard-support/auth/data-access';
 import { Router } from '@angular/router';
@@ -43,6 +43,7 @@ import { getPageNumbers } from '@my-dashboard-support/shared/util-pagination';
 })
 export class PremaritalComponent implements OnInit, OnDestroy {
   // ============ Dependencies ============
+
   private readonly userService = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly navService = inject(NavigationService);
@@ -64,7 +65,6 @@ export class PremaritalComponent implements OnInit, OnDestroy {
     Math.ceil(this.totalItems() / this.itemsPerPage())
   );
 
-  readonly hasResults = computed(() => this.filteredUsers().length > 0);
 
   readonly permissions = computed(() => ({
     canCreateUser: this.permissionService.hasPermission('create_user'),

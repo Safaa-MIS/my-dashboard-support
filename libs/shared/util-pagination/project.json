@@ -5,6 +5,8 @@
   "prefix": "lib",
   "projectType": "library",
   "tags": ["type:util", "scope:shared"],
+
+  "implicitDependencies": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

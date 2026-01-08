@@ -11,6 +11,7 @@ import { computed, ChangeDetectionStrategy } from '@angular/core';
   imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush 
 })
 
 export class MainLayout {

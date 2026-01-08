@@ -1,3 +1,2 @@
-export * from './lib/applications-service';
-
-
+export * from './lib/services/applications-service';
+export * from './lib/models/app-card.dto';
